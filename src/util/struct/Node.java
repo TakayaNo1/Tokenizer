@@ -42,9 +42,11 @@ public class Node<T>{
 		}
 		return false;
 	}
+	public List<Node<T>> getChildren(){return children;}
 	public int getChildrenSize(){return children.size();}
 	public Node<T> getChildren(int i){return children.get(i);}
 	public Node<T> getParent(){return parent;}
+	
 	public T getElement(){return this.element;}
 	public void setElement(T element){this.element=element;}
 }

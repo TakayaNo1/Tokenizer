@@ -3,6 +3,10 @@ package util.struct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,19 +14,23 @@ import util.struct.HTMLElement.HTMLElementState;
 import util.struct.element.ElementState;
 import util.struct.element.EndElementState;
 import util.struct.element.StartElementState;
-import util.url.HTMLDownloader;
 
 public class HTMLTokenizer {
-	private static final boolean Display=false; 
+	public static final String charset="UTF-8";
+	private static final boolean Display=false;
 	
-	private List<String> list;
+	private BufferedReader reader;
 	private String line;
 	private int line_index;
 	private HTMLElement prevElement;
+	private List<HTMLElement> activeElements=new ArrayList<>();
 	
 	public HTMLTokenizer(String url){
 		try {
-			list=HTMLDownloader.read(url);
+			URLConnection conn = new URL(url).openConnection();
+			InputStream is = conn.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is,charset);
+			reader=new BufferedReader(isr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -31,16 +39,10 @@ public class HTMLTokenizer {
 		if(file.exists()){
 			try {
 				FileReader fr=new FileReader(file);
-				BufferedReader br=new BufferedReader(fr);
-				list=new ArrayList<>();
-				while(br.ready()){
-					list.add(br.readLine());
-				}
-				br.close();
+				reader=new BufferedReader(fr);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 	
@@ -48,20 +50,41 @@ public class HTMLTokenizer {
 		line_index+=i;
 	}
 	public char getChar(){
-		if(line==null)line=list.remove(0);
-		if(line.length()<=line_index && list.size()>0){
-			line=list.remove(0);
-			line_index=0;
-			return ' ';
-		}
-		if(list.size()==0&&line.length()<=line_index){
+		try{
+			if(line==null){
+				line=reader.readLine();
+			}
+			if(line.length()<=line_index){
+				line=reader.readLine();
+				if(line!=null){
+					line_index=0;
+					return ' ';
+				}else{
+					reader.close();
+					return (char)0;
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
 			return (char)0;
 		}
 		return line.charAt(line_index++);
 	}
+//	public char getChar(){
+//		if(line==null)line=list.remove(0);
+//		if(line.length()<=line_index && list.size()>0){
+//			line=list.remove(0);
+//			line_index=0;
+//			if(list.size()%1000==0)System.out.println(list.size());
+//			return ' ';
+//		}
+//		if(list.size()==0&&line.length()<=line_index){
+//			return (char)0;
+//		}
+//		return line.charAt(line_index++);
+//	}
 	public HTMLElement getPrevHTMLElement(){return prevElement;}
-	private List<HTMLElement> activeElements=new ArrayList<>();
-	private HTMLElement getNextHTMLElement(){
+	protected HTMLElement getNextHTMLElement(){
 		ElementState es=new StartElementState(this);
 		
 		while(es != null && !(es instanceof EndElementState) ){
@@ -130,7 +153,7 @@ public class HTMLTokenizer {
 		}
 		return root;
 	}
-	private List<Node<HTMLElement>> getNodeChild(int i,boolean display){
+	protected List<Node<HTMLElement>> getNodeChild(int i,boolean display){
 		List<Node<HTMLElement>> child=new ArrayList<>();
 		HTMLElement element=getNextHTMLElement();
 		Node<HTMLElement> node=new Node<>(element);
