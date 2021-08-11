@@ -1,6 +1,7 @@
-package util.struct.element;
+package util.struct.html.element;
 
-import util.struct.HTMLElement;
+import util.struct.ElementState;
+import util.struct.html.HTMLElement;
 
 public class EndElementState implements ElementState{
 	public HTMLElement e;

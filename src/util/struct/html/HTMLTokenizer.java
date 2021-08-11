@@ -1,88 +1,30 @@
-package util.struct;
+package util.struct.html;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.struct.HTMLElement.HTMLElementState;
-import util.struct.element.ElementState;
-import util.struct.element.EndElementState;
-import util.struct.element.StartElementState;
+import util.struct.ElementState;
+import util.struct.Node;
+import util.struct.Tokenizer;
+import util.struct.html.HTMLElement.HTMLElementState;
+import util.struct.html.element.EndElementState;
+import util.struct.html.element.StartElementState;
 
-public class HTMLTokenizer {
+public class HTMLTokenizer extends Tokenizer{
 	public static final String charset="UTF-8";
 	private static final boolean Display=false;
 	
-	private BufferedReader reader;
-	private String line;
-	private int line_index;
 	private HTMLElement prevElement;
 	private List<HTMLElement> activeElements=new ArrayList<>();
 	
 	public HTMLTokenizer(String url){
-		try {
-			URLConnection conn = new URL(url).openConnection();
-			InputStream is = conn.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is,charset);
-			reader=new BufferedReader(isr);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		super(url);
 	}
 	public HTMLTokenizer(File file){
-		if(file.exists()){
-			try {
-				FileReader fr=new FileReader(file);
-				reader=new BufferedReader(fr);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		super(file);
 	}
 	
-	public void addIndex(int i){
-		line_index+=i;
-	}
-	public char getChar(){
-		try{
-			if(line==null){
-				line=reader.readLine();
-			}
-			if(line.length()<=line_index){
-				line=reader.readLine();
-				if(line!=null){
-					line_index=0;
-					return ' ';
-				}else{
-					reader.close();
-					return (char)0;
-				}
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-			return (char)0;
-		}
-		return line.charAt(line_index++);
-	}
-//	public char getChar(){
-//		if(line==null)line=list.remove(0);
-//		if(line.length()<=line_index && list.size()>0){
-//			line=list.remove(0);
-//			line_index=0;
-//			if(list.size()%1000==0)System.out.println(list.size());
-//			return ' ';
-//		}
-//		if(list.size()==0&&line.length()<=line_index){
-//			return (char)0;
-//		}
-//		return line.charAt(line_index++);
-//	}
 	public HTMLElement getPrevHTMLElement(){return prevElement;}
 	protected HTMLElement getNextHTMLElement(){
 		ElementState es=new StartElementState(this);

@@ -1,4 +1,4 @@
-package util.test;
+package test;
 
 import java.beans.PropertyVetoException;
 import java.util.Locale;

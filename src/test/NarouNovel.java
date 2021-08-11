@@ -1,10 +1,10 @@
-package util.test;
+package test;
 
 import java.util.List;
 
-import util.struct.HTMLElement;
-import util.struct.HTMLTokenizer;
 import util.struct.Node;
+import util.struct.html.HTMLElement;
+import util.struct.html.HTMLTokenizer;
 
 public class NarouNovel {
 	

@@ -1,8 +1,9 @@
-package util.struct;
+package util.struct.html;
 
 import java.io.File;
 
-import util.struct.HTMLElement.HTMLElementState;
+import util.struct.Node;
+import util.struct.html.HTMLElement.HTMLElementState;
 
 public class XMLTokenizer extends HTMLTokenizer{
 	private static final boolean Display=false;

@@ -1,13 +1,19 @@
-package util.struct;
+package util.struct.html;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-public class HTMLElement{
+import util.struct.Element;
+import util.struct.Node;
+
+public class HTMLElement implements Element{
 	
 	private String tag,content;
-	private List<String> meta=new ArrayList<>();
+//	private List<String> meta=new ArrayList<>();
+	private Map<String, String> meta=new HashMap<String, String>();
 	private HTMLElementState state;
 	
 	public HTMLElement(){
@@ -25,16 +31,25 @@ public class HTMLElement{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public List<String> getMeta() {
+//	public List<String> getMeta() {
+//		return meta;
+//	}
+//	public void setMeta(List<String> meta) {
+//		for(int i=0;i<meta.size();i++){
+//			if(meta.get(i).length()<2){
+//				meta.remove(i);
+//			}
+//		}
+//		this.meta = meta;
+//	}
+	public Map<String, String> getMeta(){
 		return meta;
 	}
-	public void setMeta(List<String> meta) {
-		for(int i=0;i<meta.size();i++){
-			if(meta.get(i).length()<2){
-				meta.remove(i);
-			}
-		}
-		this.meta = meta;
+	public void setMeta(Map<String, String> meta){
+		this.meta=meta;
+	}
+	public void addMeta(String key,String value){
+		this.meta.put(key, value);
 	}
 	public HTMLElementState getState() {
 		return state;
@@ -68,13 +83,17 @@ public class HTMLElement{
 	public static List<Node<HTMLElement>> sort(Node<HTMLElement> root,String match){return sort(root, match.split("/"), 0);}
 	private static List<Node<HTMLElement>> sort(Node<HTMLElement> node,String[] match,int index){
 		char[] cs=match[index].toCharArray();
-		String tag="", meta="";
+		String tag="", metaKey="",metaValue="";
 		int state=0;
 		for(int i=0;i<cs.length;i++){
 			if(cs[i]=='[') state=1;
 			else if(cs[i]==']') break;
 			else if(state==0) tag+=cs[i];
-			else if(state==1) meta+=cs[i];
+			else if(state==1){
+				if(cs[i]=='=')state=2;
+				else metaKey+=cs[i];
+			}
+			else if(state==2)metaValue+=cs[i];
 		}
 		
 		List<Node<HTMLElement>> list=new ArrayList<>();
@@ -83,7 +102,8 @@ public class HTMLElement{
 			HTMLElement e=cNode.getElement();
 			
 			if(e != null && e.getTag().equals(tag)){
-				if(state==0 || (state==1 && e.getMeta().contains(meta))){
+//				System.out.println(metaKey+" "+metaValue);
+				if(state==0 || (state==2 && e.getMeta().containsKey(metaKey) && e.getMeta().get(metaKey).equals(metaValue))){
 					//System.out.println(index+" "+match.length+" "+tag+" "+meta+" "+state);
 					if(match.length-1>index){
 						list.addAll(sort(cNode, match, index+1));

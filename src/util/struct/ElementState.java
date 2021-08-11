@@ -1,4 +1,4 @@
-package util.struct.element;
+package util.struct;
 
 public interface ElementState {
 	public ElementState state();

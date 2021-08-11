@@ -1,11 +1,12 @@
-package util.struct.element;
+package util.struct.html.element;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import util.struct.HTMLElement;
-import util.struct.HTMLTokenizer;
-import util.struct.HTMLElement.HTMLElementState;
+import util.struct.ElementState;
+import util.struct.html.HTMLElement;
+import util.struct.html.HTMLTokenizer;
+import util.struct.html.HTMLElement.HTMLElementState;
 
 public class StartElementState implements ElementState{
 	
@@ -71,7 +72,7 @@ class C implements ElementState{
 		if(c==' '){
 			//System.out.print("tag: "+tag);
 			e.setTag(tag);
-			return new D(ht,e,"",new ArrayList<>());
+			return new D(ht,e,"",new HashMap<>());
 		}else if(c=='>'){
 			//System.out.print("tag: "+tag);
 			//System.out.println(" END.");
@@ -90,32 +91,39 @@ class D implements ElementState{
 	private HTMLTokenizer ht;
 	private HTMLElement e;
 	private String meta;
-	private List<String> metaList;
+	private Map<String, String> metaMap;
 	
-	public D(HTMLTokenizer ht,HTMLElement e,String meta,List<String> metaList) {
+	public D(HTMLTokenizer ht,HTMLElement e,String meta,Map<String, String> metaMap) {
 		this.ht=ht;
 		this.e=e;
 		this.meta=meta;
-		this.metaList=metaList;
+		this.metaMap=metaMap;
 	}
 	
 	@Override
 	public ElementState state() {
 		char c=ht.getChar();
 		if(c=='\"'){
-			return new E(ht,e,meta+c,metaList);
+			return new E(ht,e,meta+c,metaMap);
 		}else if(c=='>'){
-			metaList.add(meta);
+			addMeta(meta);
 			//System.out.println(metaList+" END.");
-			e.setMeta(metaList);
+			e.setMeta(metaMap);
 			e.setState(HTMLElementState.END);
 			return new EndElementState(e);
 		}else if(c==' '){
-			metaList.add(meta);
-			return new D(ht,e,"",metaList);
+			addMeta(meta);
+			return new D(ht,e,"",metaMap);
 		}else{
-			return new D(ht,e,meta+c,metaList);
+			return new D(ht,e,meta+c,metaMap);
 		}
+	}
+	
+	private void addMeta(String meta){
+		if(!meta.contains("="))return;
+		String[] m=meta.split("=");
+		m[1]=m[1].replaceAll("\"", "");
+		metaMap.put(m[0],m[1]);
 	}
 }
 
@@ -124,22 +132,22 @@ class E implements ElementState{
 	private HTMLTokenizer ht;
 	private HTMLElement e;
 	private String meta;
-	private List<String> metaList;
+	private Map<String, String> metaMap;
 	
-	public E(HTMLTokenizer ht,HTMLElement e,String meta,List<String> metaList) {
+	public E(HTMLTokenizer ht,HTMLElement e,String meta,Map<String, String> metaMap) {
 		this.ht=ht;
 		this.e=e;
 		this.meta=meta;
-		this.metaList=metaList;
+		this.metaMap=metaMap;
 	}
 	
 	@Override
 	public ElementState state() {
 		char c=ht.getChar();
 		if(c=='\"'){
-			return new D(ht,e,meta+c,metaList);
+			return new D(ht,e,meta+c,metaMap);
 		}else{
-			return new E(ht,e,meta+c,metaList);
+			return new E(ht,e,meta+c,metaMap);
 		}
 	}
 }
@@ -167,7 +175,7 @@ class F implements ElementState{
 				e.setState(HTMLElementState.START);
 			}
 			e.setTag(tag);
-			return new G(ht,e,"",new ArrayList<>());
+			return new G(ht,e,"",new HashMap<>());
 		}else if(c=='>'){
 			if(isStayTag(tag)){
 				e.setState(HTMLElementState.STAY);
@@ -199,38 +207,38 @@ class G implements ElementState{
 	private HTMLTokenizer ht;
 	private HTMLElement e;
 	private String meta;
-	private List<String> metaList;
+	private Map<String, String> metaMap;
 	
-	public G(HTMLTokenizer ht,HTMLElement e,String meta,List<String> metaList) {
+	public G(HTMLTokenizer ht,HTMLElement e,String meta,Map<String, String> metaMap) {
 		this.ht=ht;
 		this.e=e;
 		this.meta=meta;
-		this.metaList=metaList;
+		this.metaMap=metaMap;
 	}
 	
 	@Override
 	public ElementState state() {
 		char c=ht.getChar();
 		if(c=='\"'){
-			return new H(ht,e,meta+c,metaList);
+			return new H(ht,e,meta+c,metaMap);
 		}else if(c=='>'){
-			metaList.add(meta);
+			addMeta(meta);
 			//System.out.println(metaList+" START.");
-			e.setMeta(metaList);
+			e.setMeta(metaMap);
 			//node.setState(HTMLElementState.START);
 			return new EndElementState(e);
 		}else if(c=='/'){
-			metaList.add(meta);
+			addMeta(meta);
 			//System.out.println(metaList);
-			e.setMeta(metaList);
+			e.setMeta(metaMap);
 			return new I(ht,e);
 		}else if(c==' '){
-			metaList.add(meta);
-			return new G(ht,e,"",metaList);
+			addMeta(meta);
+			return new G(ht,e,"",metaMap);
 		}else if(c=='\'' || c=='\"'){
 			return stringState(c);
 		}else{
-			return new G(ht,e,meta+c,metaList);
+			return new G(ht,e,meta+c,metaMap);
 		}
 	}
 	
@@ -243,6 +251,13 @@ class G implements ElementState{
 		meta+=c;
 		return state();
 	}
+	
+	private void addMeta(String meta){
+		if(!meta.contains("="))return;
+		String[] m=meta.split("=");
+		m[1]=m[1].replaceAll("\"", "");
+		metaMap.put(m[0],m[1]);
+	}
 }
 
 class H implements ElementState{
@@ -250,22 +265,22 @@ class H implements ElementState{
 	private HTMLTokenizer ht;
 	private HTMLElement e;
 	private String meta;
-	private List<String> metaList;
+	private Map<String, String> metaMap;
 	
-	public H(HTMLTokenizer ht,HTMLElement e,String meta,List<String> metaList) {
+	public H(HTMLTokenizer ht,HTMLElement e,String meta,Map<String, String> metaMap) {
 		this.ht=ht;
 		this.e=e;
 		this.meta=meta;
-		this.metaList=metaList;
+		this.metaMap=metaMap;
 	}
 	
 	@Override
 	public ElementState state() {
 		char c=ht.getChar();
 		if(c=='\"'){
-			return new G(ht,e,meta+c,metaList);
+			return new G(ht,e,meta+c,metaMap);
 		}else{
-			return new H(ht,e,meta+c,metaList);
+			return new H(ht,e,meta+c,metaMap);
 		}
 	}
 }
@@ -343,11 +358,11 @@ class CommentOut implements ElementState{
 		char c=ht.getChar();
 		if(c=='>'){
 			//System.out.println(" CommentOut.");
-			ArrayList<String>list=new ArrayList<>();
-			list.add(co);
+			Map<String, String> metaMap=new HashMap<String, String>();
+			metaMap.put("comment_out", co);
 			node.setTag("");
 			node.setState(HTMLElementState.COMMENT_OUT);
-			node.setMeta(list);
+			node.setMeta(metaMap);
 			return new EndElementState(node);
 		}else if(c=='-'){
 			return co5(node,co+"-");

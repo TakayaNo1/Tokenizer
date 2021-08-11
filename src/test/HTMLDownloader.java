@@ -1,25 +1,22 @@
-package util.url.test;
+package test;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Test {
-	public static void main(String[] args) throws Exception{
-		String charset="UTF-8";
-		String url="https://game.mahjongsoul.com/";
-		
+public class HTMLDownloader {
+	public static final String charset="UTF-8";
+	
+	public static List<String> read(String url) throws Exception {
 		InputStream is = null;
 		InputStreamReader isr = null;
 		BufferedReader br = null;
 		try {
 			URLConnection conn = new URL(url).openConnection();
-			//URLConnection conn = new URL(url).openConnection(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(url, 0)));
 			is = conn.getInputStream();
 			isr = new InputStreamReader(is,charset);
 			br = new BufferedReader(isr);
@@ -28,10 +25,8 @@ public class Test {
 			String line = null;
 			while((line = br.readLine()) != null) {
 				lineList.add(line);
-				System.out.println(line);
 			}
-			
-			//return lineList;
+			return lineList;
 		}finally {
 			try {
 				br.close();
@@ -45,6 +40,18 @@ public class Test {
 				is.close();
 			}catch(Exception e) {
 			}
+		}
+	}
+	
+	public static void main(String[] args){
+		try {
+			//List<String> list=read("https://ja.wikipedia.org/wiki/%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E3%82%A6%E3%82%A9%E3%83%BC%E3%82%AF");
+			List<String> list=read("https://www.futbin.com/20/player/44079/lionel-messi");
+			for(String line:list){
+				System.out.println(line);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
