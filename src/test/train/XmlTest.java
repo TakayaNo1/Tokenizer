@@ -1,6 +1,7 @@
 package test.train;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import util.struct.html.HTMLElement;
 import util.struct.html.XMLTokenizer;
 
 public class XmlTest {
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 //		XMLTokenizer xml=new XMLTokenizer(new File("D:/Download/国土交通省データ/鉄道データ/N02-08/KS-META-N02-08.xml"));
 		XMLTokenizer xml=new XMLTokenizer(new File("D:/Download/国土交通省データ/鉄道データ/N02-08/N02-08.xml"));
 		

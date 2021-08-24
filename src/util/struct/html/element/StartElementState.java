@@ -46,7 +46,9 @@ class B implements ElementState{
 		if(c=='/'){
 			return new C(ht,e,"/");
 		}else if(c=='!'){
-			return new CommentOut(ht,e);
+			return new CommentOut(ht, e);
+		}else if(c=='?'){
+			return new J(ht, e);
 		}else{
 			return new F(ht,e,""+c);
 		}
@@ -308,6 +310,84 @@ class I implements ElementState{
 	}
 }
 
+class J implements ElementState{
+	/*
+	 * processing instraction <?php ..?> <?xml ..?>
+	 * */
+	private HTMLTokenizer ht;
+	private HTMLElement e;
+	private String tag;
+	
+	public J(HTMLTokenizer ht,HTMLElement e) {
+		this.ht=ht;
+		this.e=e;
+		this.tag="";
+	}
+	
+	@Override
+	public ElementState state() {
+		char c=ht.getChar();
+		if(c==' '){
+			e.setTag(tag);
+			return new K(ht, e);
+		}else if(c=='?'){
+			e.setTag(tag);
+			return new L(ht, e);
+		}else{
+			tag+=c;
+			return this;
+		}
+	}
+}
+
+class K implements ElementState{
+	
+	private HTMLTokenizer ht;
+	private HTMLElement e;
+	private String context;
+	
+	public K(HTMLTokenizer ht,HTMLElement e) {
+		this.ht=ht;
+		this.e=e;
+		this.context="";
+	}
+	
+	@Override
+	public ElementState state() {
+		char c=ht.getChar();
+		if(c=='?'){
+			this.e.setContent(context);
+			return new L(ht, e);
+		}else{
+			this.context+=c;
+			return this;
+		}
+	}
+}
+
+class L implements ElementState{
+	
+	private HTMLTokenizer ht;
+	private HTMLElement e;
+	
+	public L(HTMLTokenizer ht,HTMLElement e) {
+		this.ht=ht;
+		this.e=e;
+	}
+	
+	@Override
+	public ElementState state() {
+		char c=ht.getChar();
+		if(c=='>'){
+			e.setState(HTMLElementState.PROCESSING_STAY);
+			//System.out.println(e+" "+e.getContent());
+			return new EndElementState(e);
+		}else{
+			return new L(ht,e);
+		}
+	}
+}
+
 class CommentOut implements ElementState{
 	
 	private HTMLTokenizer ht;
@@ -326,7 +406,8 @@ class CommentOut implements ElementState{
 		}else if(c==' '){
 			return new CommentOut(ht,e);
 		}else{
-			return new F(ht,e,"!"+c);
+			return doctype(e, ""+c);
+			//return new F(ht,e,"!"+c);
 		}
 	}
 	private ElementState co2(HTMLElement node){
@@ -334,7 +415,8 @@ class CommentOut implements ElementState{
 		if(c=='-'){
 			return co3(node,"");
 		}else{
-			return new F(ht,node,"!-"+c);
+			return doctype(node, "!-"+c);
+			//return new F(ht,node,"!-"+c);
 		}
 	}
 	private ElementState co3(HTMLElement node,String co){
@@ -368,6 +450,32 @@ class CommentOut implements ElementState{
 			return co5(node,co+"-");
 		}else{
 			return co3(node,co+"--"+c);
+		}
+	}
+	private ElementState doctype(HTMLElement node,String tag){
+		char c=ht.getChar();
+		if(c=='>'){
+			node.setTag(tag);
+			node.setState(HTMLElementState.COMMENT_OUT);
+			return new EndElementState(node);
+		}else if(c==' '){
+			return doctype2(node, tag, "");
+		}else{
+			return doctype(node, tag+c);
+		}
+	}
+	private ElementState doctype2(HTMLElement node,String tag,String context){
+		char c=ht.getChar();
+		if(c=='>'){
+			Map<String, String> metaMap=new HashMap<String, String>();
+			metaMap.put("comment_out", context);
+			node.setTag(tag);
+			node.setState(HTMLElementState.COMMENT_OUT);
+			node.setMeta(metaMap);
+			//System.out.println(node);
+			return new EndElementState(node);
+		}else{
+			return doctype2(node, tag, context+c);
 		}
 	}
 }

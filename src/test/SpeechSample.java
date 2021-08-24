@@ -70,7 +70,7 @@ public class SpeechSample {
 	}
 
 	public static void main(String[] args) {
-		String message = "Hello World.";
+		String message = "KONNN KNEAR CHIWAR.";
 		
 		SpeechSample sample = new SpeechSample();
 		sample.speak(message);

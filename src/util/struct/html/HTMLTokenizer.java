@@ -1,6 +1,8 @@
 package util.struct.html;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +20,14 @@ public class HTMLTokenizer extends Tokenizer{
 	private HTMLElement prevElement;
 	private List<HTMLElement> activeElements=new ArrayList<>();
 	
-	public HTMLTokenizer(String url){
+	public HTMLTokenizer(URL url) throws IOException{
 		super(url);
 	}
-	public HTMLTokenizer(File file){
+	public HTMLTokenizer(File file) throws IOException{
 		super(file);
+	}
+	public HTMLTokenizer(String text){
+		super(text);
 	}
 	
 	public HTMLElement getPrevHTMLElement(){return prevElement;}
@@ -69,22 +74,26 @@ public class HTMLTokenizer extends Tokenizer{
 		return -1;
 	}
 	public Node<HTMLElement> getRootNode(){
-		HTMLElement element=getNextHTMLElement();
-		Node<HTMLElement> root=new Node<>();
-		Node<HTMLElement> node=new Node<>(element);
+//		HTMLElement element=getNextHTMLElement();
+//		Node<HTMLElement> root=new Node<>();
+//		Node<HTMLElement> node=new Node<>(element);
 		
 		//System.out.println(node);
-		root.addChild(node);
-		while(element.getState()==HTMLElementState.CONTENT){
-			element=getNextHTMLElement();
-			node=new Node<>(element);
-			root.addChild(node);
-		}
-		while(!element.getTag().equalsIgnoreCase("!DOCTYPE")){
-			element=getNextHTMLElement();
-			node=new Node<>(element);
-			root.addChild(node);
-		}
+//		root.addChild(node);
+//		while(element.getState()==HTMLElementState.CONTENT){
+//			element=getNextHTMLElement();
+//			node=new Node<>(element);
+//			root.addChild(node);
+//		}
+//		while(!element.getTag().equalsIgnoreCase("!DOCTYPE")){
+//			element=getNextHTMLElement();
+//			node=new Node<>(element);
+//			root.addChild(node);
+//		}
+		
+		HTMLElement element=null;
+		Node<HTMLElement> root=new Node<>();
+		Node<HTMLElement> node=new Node<>();
 		
 		while((element = getNextHTMLElement()) != null){
 			node=new Node<>(element);

@@ -3,8 +3,10 @@ package util.struct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -14,25 +16,22 @@ public abstract class Tokenizer {
 	private String line;
 	private int line_index;
 	
-	public Tokenizer(String url){
-		try {
-			URLConnection conn = new URL(url).openConnection();
-			InputStream is = conn.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is,charset);
-			reader=new BufferedReader(isr);
-		} catch (Exception e) {
-			e.printStackTrace();
+	public Tokenizer(URL url) throws IOException{
+		URLConnection conn = url.openConnection();
+		InputStream is = conn.getInputStream();
+		InputStreamReader isr = new InputStreamReader(is,charset);
+		reader=new BufferedReader(isr);
+	}
+	public Tokenizer(File file) throws IOException{
+		if(file.exists()){
+			FileReader fr=new FileReader(file);
+			reader=new BufferedReader(fr);
+		}else{
+			throw new IOException("file is not found.");
 		}
 	}
-	public Tokenizer(File file){
-		if(file.exists()){
-			try {
-				FileReader fr=new FileReader(file);
-				reader=new BufferedReader(fr);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	public Tokenizer(String text){
+		reader=new BufferedReader(new StringReader(text));
 	}
 	
 	public void addIndex(int i){

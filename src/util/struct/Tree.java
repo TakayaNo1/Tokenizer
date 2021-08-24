@@ -2,7 +2,7 @@ package util.struct;
 
 import java.util.List;
 
-public class Tree<T>{
+public class Tree<T extends Element>{
 	private Node<T> root;
 	private Node<T> current;
 	

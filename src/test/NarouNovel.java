@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import util.struct.Node;
@@ -13,14 +15,14 @@ public class NarouNovel {
 	private HTMLTokenizer com;
 	private Node<HTMLElement> root;
 	
-	public NarouNovel(String id){
+	public NarouNovel(String id) throws IOException{
 		this.page=0;
-		this.com=new HTMLTokenizer(rootUrl+"/"+id+"/");
+		this.com=new HTMLTokenizer(new URL(rootUrl+"/"+id+"/"));
 		this.root=com.getRootNode();
 	}
-	public NarouNovel(String id, int page){
+	public NarouNovel(String id, int page) throws IOException{
 		this.page=page;
-		this.com=new HTMLTokenizer(rootUrl+"/"+id+"/"+page+"/");
+		this.com=new HTMLTokenizer(new URL(rootUrl+"/"+id+"/"+page+"/"));
 		this.root=com.getRootNode();
 	}
 	
@@ -30,16 +32,16 @@ public class NarouNovel {
 	}
 	private void showMain(){
 		String titleMatch="html/body/"
-				+ "div[id=\"container\"]/"
-				+ "div[id=\"novel_contents\"]/"
-				+ "div[id=\"novel_color\"]/p";
+				+ "div[id=container]/"
+				+ "div[id=novel_contents]/"
+				+ "div[id=novel_color]/p";
 		String subtitleMatch="html/body/"
-				+ "div[id=\"container\"]/"
-				+ "div[id=\"novel_contents\"]/"
-				+ "div[id=\"novel_color\"]/"
-				+ "div[class=\"index_box\"]/"
-				+ "dl[class=\"novel_sublist2\"]/"
-				+ "dd[class=\"subtitle\"]/a";
+				+ "div[id=container]/"
+				+ "div[id=novel_contents]/"
+				+ "div[id=novel_color]/"
+				+ "div[class=index_box]/"
+				+ "dl[class=novel_sublist2]/"
+				+ "dd[class=subtitle]/a";
 		List<Node<HTMLElement>> titlelist=HTMLElement.sort(root, titleMatch);
 		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
 		
@@ -51,14 +53,14 @@ public class NarouNovel {
 	}
 	private void showPage(){
 		String subtitleMatch="html/body/"
-				+ "div[id=\"container\"]/"
-				+ "div[id=\"novel_contents\"]/"
-				+ "div[id=\"novel_color\"]/p";
+				+ "div[id=container]/"
+				+ "div[id=novel_contents]/"
+				+ "div[id=novel_color]/p";
 		String honbunMatch="html/body/"
-				+ "div[id=\"container\"]/"
-				+ "div[id=\"novel_contents\"]/"
-				+ "div[id=\"novel_color\"]/"
-				+ "div[id=\"novel_honbun\"]/p";
+				+ "div[id=container]/"
+				+ "div[id=novel_contents]/"
+				+ "div[id=novel_color]/"
+				+ "div[id=novel_honbun]/p";
 		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
 		List<Node<HTMLElement>> honbunlist=HTMLElement.sort(root, honbunMatch);
 		
@@ -71,8 +73,8 @@ public class NarouNovel {
 		}
 	}
 	
-	public static void main(String[] args){
-		NarouNovel nn=new NarouNovel("n2267be", 2);
+	public static void main(String[] args) throws IOException{
+		NarouNovel nn=new NarouNovel("n2267be", 1);
 		nn.show();
 	}
 }

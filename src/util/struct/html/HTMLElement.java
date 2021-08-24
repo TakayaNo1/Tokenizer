@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import util.struct.Element;
 import util.struct.Node;
@@ -12,7 +11,6 @@ import util.struct.Node;
 public class HTMLElement implements Element{
 	
 	private String tag,content;
-//	private List<String> meta=new ArrayList<>();
 	private Map<String, String> meta=new HashMap<String, String>();
 	private HTMLElementState state;
 	
@@ -31,17 +29,6 @@ public class HTMLElement implements Element{
 	public void setContent(String content) {
 		this.content = content;
 	}
-//	public List<String> getMeta() {
-//		return meta;
-//	}
-//	public void setMeta(List<String> meta) {
-//		for(int i=0;i<meta.size();i++){
-//			if(meta.get(i).length()<2){
-//				meta.remove(i);
-//			}
-//		}
-//		this.meta = meta;
-//	}
 	public Map<String, String> getMeta(){
 		return meta;
 	}
@@ -130,14 +117,6 @@ public class HTMLElement implements Element{
 	}
 
 	public enum HTMLElementState{
-		START,END,STAY,COMMENT_OUT,CONTENT;
-	}
-	
-	public static void main(String[] args){
-		String str="abcefg";
-		Pattern p=Pattern.compile("[\\[\\]]");
-		String[] a=p.split(str);
-		System.out.println(a.length);
-		for(String b:a)System.out.println(b);
+		START,END,STAY,COMMENT_OUT,CONTENT,PROCESSING_STAY;
 	}
 }
