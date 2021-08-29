@@ -1,6 +1,7 @@
 package test;
 
 import java.net.URL;
+import java.util.List;
 
 import test.wikipedia.WikiPage;
 import test.wikipedia.Wikipedia;
@@ -10,7 +11,7 @@ import util.struct.html.HTMLTokenizer;
 
 public class Test {
 	public static void main(String[] args) throws Exception{
-		test5();
+		test1();
 	}
 	private static void test1() throws Exception{
 		//HTMLTokenizer com=new HTMLTokenizer("https://www.futbin.com/20/player/44079/lionel-messi");
@@ -33,14 +34,14 @@ public class Test {
 			//for(int i=0;i<e.getChildrenSize();i++)System.out.println(" "+e.getChildren(i).getElement());
 			System.out.print("\n"+e.getParent().getElement()+"\n");HTMLElement.show(e);
 		});
-//		List<Node<HTMLElement>> titlelist=HTMLElement.sort(root, titleMatch);
-//		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
-//		
-//		System.out.println(titlelist.get(0).getChildren(0).getElement().getContent());
-//		for(int i=0;i<subtitlelist.size();i++){
-//			Node<HTMLElement> node=subtitlelist.get(i);
-//			System.out.println(node.getElement().getMeta()+" "+node.getChildren(0).getElement().getContent());
-//		}
+		List<Node<HTMLElement>> titlelist=HTMLElement.sort(root, titleMatch);
+		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
+		
+		System.out.println(titlelist.get(0).getChildren(0).getElement().getContent());
+		for(int i=0;i<subtitlelist.size();i++){
+			Node<HTMLElement> node=subtitlelist.get(i);
+			System.out.println(node.getElement().getMeta()+" "+node.getChildren(0).getElement().getContent());
+		}
 	}
 	private static void test2() throws Exception{
 		HTMLTokenizer com=new HTMLTokenizer(new URL("https://www.netflix.com/jp/title/81262169"));
