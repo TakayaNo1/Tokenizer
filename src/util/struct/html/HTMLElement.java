@@ -8,7 +8,7 @@ import java.util.Map;
 import util.struct.Element;
 import util.struct.Node;
 
-public class HTMLElement implements Element{
+public class HTMLElement extends Element{
 	
 	private String tag,content;
 	private Map<String, String> meta=new HashMap<String, String>();
@@ -54,19 +54,6 @@ public class HTMLElement implements Element{
 		return "Tag:"+tag+" ,Meta:"+meta+" ,State:"+state;
 	}
 	
-	public static void show(Node<HTMLElement> root){show(root, 0);}
-	private static void show(Node<HTMLElement> node,int n){
-		System.out.print(n+" ");
-		for(int i=0;i<n;i++)System.out.print("  ");
-		if(node.getElement()==null || node.getElement().toString()==null){
-			System.out.println("null");
-		}else{
-			System.out.print(node.getElement().toString()+"\n");
-		}
-		for(int i=0;i<node.getChildrenSize();i++){
-			show(node.getChildren(i), n+1);
-		}
-	}
 	public static List<Node<HTMLElement>> sort(Node<HTMLElement> root,String match){return sort(root, match.split("/"), 0);}
 	private static List<Node<HTMLElement>> sort(Node<HTMLElement> node,String[] match,int index){
 		char[] cs=match[index].toCharArray();

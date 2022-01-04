@@ -494,9 +494,13 @@ class Content implements ElementState{
 	
 	@Override
 	public ElementState state() {
-		String tag=ht.getPrevHTMLElement().getTag();
-		if(tag.equalsIgnoreCase("script") || tag.equalsIgnoreCase("style")){
-			return scriptState();
+		HTMLElement pe=ht.getPrevHTMLElement();
+		
+		if(pe!=null) {
+			String tag=pe.getTag();
+			if(tag.equalsIgnoreCase("script") || tag.equalsIgnoreCase("style")){
+				return scriptState();
+			}
 		}
 		
 		char c=ht.getChar();

@@ -26,6 +26,7 @@ public class HTMLTokenizer extends Tokenizer{
 	public HTMLTokenizer(File file) throws IOException{
 		super(file);
 	}
+	@Deprecated
 	public HTMLTokenizer(String text){
 		super(text);
 	}
@@ -93,7 +94,7 @@ public class HTMLTokenizer extends Tokenizer{
 		
 		HTMLElement element=null;
 		Node<HTMLElement> root=new Node<>();
-		Node<HTMLElement> node=new Node<>();
+		Node<HTMLElement> node;
 		
 		while((element = getNextHTMLElement()) != null){
 			node=new Node<>(element);

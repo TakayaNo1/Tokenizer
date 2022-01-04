@@ -9,7 +9,7 @@ import util.struct.Node;
 import util.struct.html.HTMLElement;
 import util.struct.html.HTMLTokenizer;
 
-public class Test {
+public class HTMLTest {
 	public static void main(String[] args) throws Exception{
 		test1();
 	}
