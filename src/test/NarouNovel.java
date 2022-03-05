@@ -74,7 +74,16 @@ public class NarouNovel {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		NarouNovel nn=new NarouNovel("n2267be", 1);
-		nn.show();
+//		NarouNovel nn=new NarouNovel("n2267be", 1);
+//		nn.show();
+		matchTest();
+	}
+	
+	public static void matchTest() {
+		String[] ids={"n2267be", "n1111", "abcdefg", "n111.1", "n", "nn"};
+		String match="n[\\w]+";
+		for(String id:ids) {
+			System.out.println(id.matches(match));
+		}
 	}
 }
