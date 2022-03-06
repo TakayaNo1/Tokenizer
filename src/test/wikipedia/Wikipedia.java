@@ -29,7 +29,7 @@ public class Wikipedia extends HTMLTokenizer{
 			
 			if(page==null)return null;
 			
-			List<Node<HTMLElement>> elements=HTMLElement.sort(page, "page/title");
+			List<Node<HTMLElement>> elements=HTMLElement.search(page, "page/title");
 			
 			for(Node<HTMLElement> e:elements){
 				String title=HTMLElement.getContents(e).get(0);

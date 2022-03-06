@@ -43,8 +43,8 @@ public class JsonElement extends Element {
 		OBJECT_START,OBJECT_END,ARRAY_START,ARRAY_END;
 	}
 	
-	public static List<Node<JsonElement>> sort(Node<JsonElement> root,String match){return sort(root, match.split("/"), 0);}
-	private static List<Node<JsonElement>> sort(Node<JsonElement> node,String[] match,int index){
+	public static List<Node<JsonElement>> search(Node<JsonElement> root,String match){return search(root, match.split("/"), 0);}
+	private static List<Node<JsonElement>> search(Node<JsonElement> node,String[] match,int index){
 		String key = match[index];
 		
 		List<Node<JsonElement>> list=new ArrayList<>();
@@ -56,14 +56,14 @@ public class JsonElement extends Element {
 				if(e.getKey()==null) {
 					if(key.equals("{") && e.getState()==JsonElementState.OBJECT_START || key.equals("[") && e.getState()==JsonElementState.ARRAY_START) {
 						if(match.length-1>index){
-							list.addAll(sort(cNode, match, index+1));
+							list.addAll(search(cNode, match, index+1));
 						}else if(match.length-1==index){
 							list.add(cNode);
 						}
 					}
 				}else if(e.getKey().equals(key)) {
 					if(match.length-1>index){
-						list.addAll(sort(cNode, match, index+1));
+						list.addAll(search(cNode, match, index+1));
 					}else if(match.length-1==index){
 						list.add(cNode);
 					}

@@ -19,7 +19,7 @@ public class WikiPage {
 		this.title=title;
 		
 		HTMLElement.show(page);
-		Node<HTMLElement> p=HTMLElement.sort(page, "page/revision/text").get(0);
+		Node<HTMLElement> p=HTMLElement.search(page, "page/revision/text").get(0);
 		String text=HTMLElement.getContents(p).get(0).replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"").replaceAll("&amp;amp;", "&amp;");//.replaceAll("&amp;", "&");
 		XMLTokenizer tkn=new XMLTokenizer("<?xml version=\"1.0\" encoding=\"UTF-8\"?><page>"+text+"</page>");
 		this.page=tkn.getRootNode();

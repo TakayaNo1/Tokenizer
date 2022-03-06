@@ -54,8 +54,8 @@ public class HTMLElement extends Element{
 		return "Tag:"+tag+" ,Meta:"+meta+" ,State:"+state;
 	}
 	
-	public static List<Node<HTMLElement>> sort(Node<HTMLElement> root,String match){return sort(root, match.split("/"), 0);}
-	private static List<Node<HTMLElement>> sort(Node<HTMLElement> node,String[] match,int index){
+	public static List<Node<HTMLElement>> search(Node<HTMLElement> root,String match){return search(root, match.split("/"), 0);}
+	private static List<Node<HTMLElement>> search(Node<HTMLElement> node,String[] match,int index){
 		char[] cs=match[index].toCharArray();
 		String tag="", metaKey="",metaValue="";
 		int state=0;
@@ -80,7 +80,7 @@ public class HTMLElement extends Element{
 				if(state==0 || (state==2 && e.getMeta().containsKey(metaKey) && e.getMeta().get(metaKey).equals(metaValue))){
 					//System.out.println(index+" "+match.length+" "+tag+" "+meta+" "+state);
 					if(match.length-1>index){
-						list.addAll(sort(cNode, match, index+1));
+						list.addAll(search(cNode, match, index+1));
 					}else if(match.length-1==index){
 						list.add(cNode);
 					}

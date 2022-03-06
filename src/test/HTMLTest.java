@@ -29,13 +29,13 @@ public class HTMLTest {
 				+ "div[class=index_box]/"
 				+ "dl[class=novel_sublist2]/"
 				+ "dd[class=subtitle]/a";
-		HTMLElement.sort(root, "html/body/div[id=container]/div[id=novel_contents]/div[id=novel_color]/div[class=index_box]/dl/dd/a").forEach((e)->{
+		HTMLElement.search(root, "html/body/div[id=container]/div[id=novel_contents]/div[id=novel_color]/div[class=index_box]/dl/dd/a").forEach((e)->{
 			//System.out.println(e.getElement());
 			//for(int i=0;i<e.getChildrenSize();i++)System.out.println(" "+e.getChildren(i).getElement());
 			System.out.print("\n"+e.getParent().getElement()+"\n");HTMLElement.show(e);
 		});
-		List<Node<HTMLElement>> titlelist=HTMLElement.sort(root, titleMatch);
-		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
+		List<Node<HTMLElement>> titlelist=HTMLElement.search(root, titleMatch);
+		List<Node<HTMLElement>> subtitlelist=HTMLElement.search(root, subtitleMatch);
 		
 		System.out.println(titlelist.get(0).getChildren(0).getElement().getContent());
 		for(int i=0;i<subtitlelist.size();i++){
@@ -58,7 +58,7 @@ public class HTMLTest {
 				+ "div[class=episodes-container]/"
 				+ "div[class=episode]";
 		
-		HTMLElement.sort(node, match).forEach((e)->{
+		HTMLElement.search(node, match).forEach((e)->{
 			System.out.println(e.getElement());
 			System.out.println("\t"+e.getChildren(1).getChildren(0).getChildren(0).getElement().getContent());
 			System.out.println("\t"+e.getChildren(2).getChildren(0).getElement().getContent());
@@ -76,10 +76,10 @@ public class HTMLTest {
 				+ "div[ID=main]/div[ID=cont]/"
 				+ "div[class=kijiWrp]/div[class=kiji]";
 		
-		HTMLElement.sort(node, "DOCTYPE").forEach((e)->{
+		HTMLElement.search(node, "DOCTYPE").forEach((e)->{
 			System.out.println(e.getElement());
 		});
-		HTMLElement.sort(node, match).forEach((e)->{
+		HTMLElement.search(node, match).forEach((e)->{
 			System.out.println();
 			HTMLElement.getContents(e).forEach(s->System.out.print(s));
 		});
@@ -95,11 +95,11 @@ public class HTMLTest {
 		final String bodyMatch="html/body/div[id=content]/div[id=bodyContent]/div[id=mw-content-text]/div[class=mw-parser-output]";
 		final String tableOfContexts=bodyMatch+"div[id=toc]";
 		
-		HTMLElement.sort(node, headMatch).forEach((e)->{
+		HTMLElement.search(node, headMatch).forEach((e)->{
 			HTMLElement.getContents(e).forEach(s->System.out.println("Title="+s));
 		});
-		HTMLElement.sort(node, bodyMatch).forEach((e1)->{
-			for(Node<HTMLElement> e2:HTMLElement.sort(e1, "p/a")){
+		HTMLElement.search(node, bodyMatch).forEach((e1)->{
+			for(Node<HTMLElement> e2:HTMLElement.search(e1, "p/a")){
 				HTMLElement.getContents(e2).forEach(e3->System.out.println(e3));
 			}
 			/*

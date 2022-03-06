@@ -31,11 +31,11 @@ public class JsonTest {
 //		JsonTokenizer tkn=new JsonTokenizer(new URL("https://www.easports.com/fifa/ultimate-team/api/fut/item?name=ronaldo"));
 		Node<JsonElement> root=tkn.getRootNode();
 //		Element.show(root);
-		JsonElement.sort(root, "{/items/{").forEach((e1)->{
-			JsonElement.sort(e1, "rating").forEach((e2)->{System.out.println(e2.getElement().getValue());});
-			JsonElement.sort(e1, "commonName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
-			JsonElement.sort(e1, "firstName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
-			JsonElement.sort(e1, "lastName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
+		JsonElement.search(root, "{/items/{").forEach((e1)->{
+			JsonElement.search(e1, "rating").forEach((e2)->{System.out.println(e2.getElement().getValue());});
+			JsonElement.search(e1, "commonName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
+			JsonElement.search(e1, "firstName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
+			JsonElement.search(e1, "lastName").forEach((e2)->{System.out.println(e2.getElement().getValue());});
 			System.out.println();
 		});
 	}

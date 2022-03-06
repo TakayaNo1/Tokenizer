@@ -42,8 +42,8 @@ public class NarouNovel {
 				+ "div[class=index_box]/"
 				+ "dl[class=novel_sublist2]/"
 				+ "dd[class=subtitle]/a";
-		List<Node<HTMLElement>> titlelist=HTMLElement.sort(root, titleMatch);
-		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
+		List<Node<HTMLElement>> titlelist=HTMLElement.search(root, titleMatch);
+		List<Node<HTMLElement>> subtitlelist=HTMLElement.search(root, subtitleMatch);
 		
 		System.out.println(titlelist.get(0).getChildren(0).getElement().getContent());
 		for(int i=0;i<subtitlelist.size();i++){
@@ -61,8 +61,8 @@ public class NarouNovel {
 				+ "div[id=novel_contents]/"
 				+ "div[id=novel_color]/"
 				+ "div[id=novel_honbun]/p";
-		List<Node<HTMLElement>> subtitlelist=HTMLElement.sort(root, subtitleMatch);
-		List<Node<HTMLElement>> honbunlist=HTMLElement.sort(root, honbunMatch);
+		List<Node<HTMLElement>> subtitlelist=HTMLElement.search(root, subtitleMatch);
+		List<Node<HTMLElement>> honbunlist=HTMLElement.search(root, honbunMatch);
 		
 		System.out.println(subtitlelist.get(0).getChildren(0).getElement().getContent()+"\n");
 		for(int i=0;i<honbunlist.size();i++){
