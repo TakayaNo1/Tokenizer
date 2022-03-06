@@ -257,6 +257,7 @@ class G implements ElementState{
 	private void addMeta(String meta){
 		if(!meta.contains("="))return;
 		String[] m=meta.split("=");
+		if(m.length<=1)return;
 		m[1]=m[1].replaceAll("\"", "");
 		metaMap.put(m[0],m[1]);
 	}

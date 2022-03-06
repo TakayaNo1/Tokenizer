@@ -63,4 +63,16 @@ public class Wikipedia extends HTMLTokenizer{
 	}
 	@Override @Deprecated
 	public Node<HTMLElement> getRootNode(){return null;}
+	
+	public static void main(String[] args) throws IOException {
+		Wikipedia wiki=new Wikipedia();
+		WikiPage page=null;
+		int i=0;
+		
+		while((page=wiki.nextPage())!=null && i++<11){
+			//WikiPage.write(page, new File("src/file/"+page.getTitle()+".xml"));
+			System.out.println("Index "+i+" "+page.getTitle());
+			HTMLElement.show(page.getNode());
+		}
+	}
 }
