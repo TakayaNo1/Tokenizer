@@ -18,8 +18,11 @@ public class WikiPage {
 	public WikiPage(String title, Node<HTMLElement> page){
 		this.title=title;
 		
-		HTMLElement.show(page);
-		Node<HTMLElement> p=HTMLElement.search(page, "page/revision/text").get(0);
+//		HTMLElement.show(page);
+		List<Node<HTMLElement>> list=HTMLElement.search(page, "page/revision/text");
+		if(list.size()==0)return;
+		
+		Node<HTMLElement> p=list.get(0);
 		String text=HTMLElement.getContents(p).get(0).replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"").replaceAll("&amp;amp;", "&amp;");//.replaceAll("&amp;", "&");
 		XMLTokenizer tkn=new XMLTokenizer("<?xml version=\"1.0\" encoding=\"UTF-8\"?><page>"+text+"</page>");
 		this.page=tkn.getRootNode();

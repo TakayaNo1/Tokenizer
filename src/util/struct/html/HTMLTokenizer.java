@@ -107,6 +107,12 @@ public class HTMLTokenizer extends Tokenizer{
 	}
 	protected List<Node<HTMLElement>> getNodeChild(int i,boolean display){
 		List<Node<HTMLElement>> child=new ArrayList<>();
+		
+//		if(i+1!=activeElements.size()) {
+////			System.out.println(i+" "+activeElements.size());
+//			return child;
+//		}
+		
 		HTMLElement element=getNextHTMLElement();
 		Node<HTMLElement> node=new Node<>(element);
 		
@@ -120,7 +126,13 @@ public class HTMLTokenizer extends Tokenizer{
 			}
 			
 			if(element.getState()==HTMLElementState.START){
-				node.addChild(getNodeChild(i+1,display));
+				List<Node<HTMLElement>> childList=getNodeChild(i+1,display);
+				node.addChild(childList);
+			}
+			
+			if(i+1!=activeElements.size()) {
+//				System.out.println(i+" "+activeElements.size());
+				break;
 			}
 			child.add(node);
 			

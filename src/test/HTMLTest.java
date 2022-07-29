@@ -7,11 +7,12 @@ import test.wikipedia.WikiPage;
 import test.wikipedia.Wikipedia;
 import util.struct.Node;
 import util.struct.html.HTMLElement;
+import util.struct.html.HTMLElement.HTMLElementState;
 import util.struct.html.HTMLTokenizer;
 
 public class HTMLTest {
 	public static void main(String[] args) throws Exception{
-		test1();
+		test3();
 	}
 	private static void test1() throws Exception{
 		//HTMLTokenizer com=new HTMLTokenizer("https://www.futbin.com/20/player/44079/lionel-messi");
@@ -66,23 +67,57 @@ public class HTMLTest {
 		});
 	}
 	private static void test3() throws Exception{
-		HTMLTokenizer com=new HTMLTokenizer(new URL("https://www.weblio.jp/content/source"));
+		test3("鍵盤");
+//		test3("楽器");
+	}
+	private static void test3(String text) throws Exception{
+		HTMLTokenizer com=new HTMLTokenizer(new URL("https://www.weblio.jp/content/"+text));
 		Node<HTMLElement> node=com.getRootNode();
 		
-		HTMLElement.show(node);
+//		HTMLElement.show(node);
 		String match="html/body/"
 				+ "div[ID=base]/"
 				+ "div[ID=wrp]/"
 				+ "div[ID=main]/div[ID=cont]/"
-				+ "div[class=kijiWrp]/div[class=kiji]";
+				+ "div[class=kijiWrp]/div[class=kiji]/div";
+		String match1="html/body/"
+				+ "div[ID=base]/"
+				+ "div[ID=wrp]/"
+				+ "div[ID=main]/div[ID=cont]/"
+				+ "div[class=kijiWrp]/div[class=kiji]/div/p";
+		String match2="html/body/"
+				+ "div[ID=base]/"
+				+ "div[ID=wrp]/"
+				+ "div[ID=main]/div[ID=cont]/"
+				+ "div[class=kijiWrp]/div[class=kiji]/div/table/tr/td/p";
 		
-		HTMLElement.search(node, "DOCTYPE").forEach((e)->{
-			System.out.println(e.getElement());
+//		HTMLElement.search(node, match2).forEach((e)->{
+//			HTMLElement.show(e);
+//		});
+		List<Node<HTMLElement>> list=HTMLElement.search(node, match1);
+		list.addAll(HTMLElement.search(node, match2));
+		list.forEach((n)->{
+			n.getChildren().forEach((c)->{
+				HTMLElement e=c.getElement();
+				if(e.getState()==HTMLElementState.CONTENT) {
+					System.out.println(e.getContent());
+				}else {
+					String t="";
+					if(c.getChildrenSize()>0) {
+						t+=c.getChildren(0).getElement().getContent()+" ";
+					}
+					String href=e.getMeta().get("href");
+					if(href==null) {
+						t+=e.getMeta();
+					}else {
+						t+=href;
+					}
+					System.out.println(t);
+				}
+			});
 		});
-		HTMLElement.search(node, match).forEach((e)->{
-			System.out.println();
-			HTMLElement.getContents(e).forEach(s->System.out.print(s));
-		});
+		
+		Thread.sleep(1000);
 	}
 	private static void test4() throws Exception{
 		String url="https://ja.wikipedia.org";
@@ -141,5 +176,11 @@ public class HTMLTest {
 			//WikiPage.write(page, new File("src/file/"+page.getTitle()+".xml"));
 			HTMLElement.show(page.getNode());
 		}
+	}
+	private static void test6() throws Exception{
+		String html="<!DOCTYPE html><html><a><b><c><d><e></a></html>";
+		HTMLTokenizer tkn=new HTMLTokenizer(html);
+		Node<HTMLElement>root=tkn.getRootNode();
+		HTMLElement.show(root);
 	}
 }

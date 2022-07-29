@@ -3,6 +3,7 @@ package test.wikipedia;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import util.struct.Node;
@@ -60,6 +61,44 @@ public class Wikipedia extends HTMLTokenizer{
 			if(title.startsWith(h))return false;
 		}
 		return true;
+	}
+	@Override
+	protected List<Node<HTMLElement>> getNodeChild(int i,boolean display){
+		List<Node<HTMLElement>> child=new ArrayList<>();
+		
+//		if(i+1!=activeElements.size()) {
+////			System.out.println(i+" "+activeElements.size());
+//			return child;
+//		}
+		
+		HTMLElement element=getNextHTMLElement();
+		Node<HTMLElement> node=new Node<>(element);
+		
+		while(element != null && element.getState()!=HTMLElementState.END){
+		//while(!element.getTag().equalsIgnoreCase(tag) && element.getState()!=HTMLElementState.END){
+			//if(node.getState()!=HTMLElementState.CONTENT)System.out.println(node+" "+node.getState().name()+" "+i);
+			if(display && element.toString()!=null){
+				System.out.print(i);
+				for(int n=0;n<i;n++)System.out.print("  ");
+				System.out.println(element);
+			}
+			
+			if(element.getState()==HTMLElementState.START){
+				node.addChild(getNodeChild(i+1,display));
+			}
+			child.add(node);
+			
+			element=getNextHTMLElement();
+			node=new Node<>(element);
+		}
+		if(display && element!=null && element.toString()!=null){
+			System.out.print(i);
+			for(int n=0;n<i;n++)System.out.print("  ");
+			System.out.println(element);
+		}
+		
+		child.add(node);//end
+		return child;
 	}
 	@Override @Deprecated
 	public Node<HTMLElement> getRootNode(){return null;}
